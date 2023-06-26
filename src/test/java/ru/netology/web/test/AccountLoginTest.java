@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import static com.codeborne.selenide.Selenide.open;
+import static ru.netology.web.data.DataHelper.cleanDataBase;
 
 
 public class AccountLoginTest {
@@ -32,12 +33,8 @@ public class AccountLoginTest {
 
     @AfterAll
     @SneakyThrows
-    public static void cleanDataBase() {
-        var connection = getConn();
-        runner.execute(connection, "DELETE FROM card_transactions");
-        runner.execute(connection, "DELETE FROM cards");
-        runner.execute(connection, "DELETE FROM auth_codes");
-        runner.execute(connection, "DELETE FROM users");
+    public static void cleanDB() {
+        cleanDataBase();
     }
 
     @SneakyThrows

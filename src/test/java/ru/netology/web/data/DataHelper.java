@@ -5,7 +5,6 @@ import com.github.javafaker.Faker;
 import lombok.SneakyThrows;
 import lombok.Value;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-
 import java.util.Locale;
 
 import static ru.netology.web.test.AccountLoginTest.getConn;
@@ -69,6 +68,15 @@ public class DataHelper {
         var result = runner.query(conn, blockingStatus, new ScalarHandler<String>());
         return result;
 
+    }
+
+    @SneakyThrows
+    public static void cleanDataBase() {
+        var connection = getConn();
+        runner.execute(connection, "DELETE FROM card_transactions");
+        runner.execute(connection, "DELETE FROM cards");
+        runner.execute(connection, "DELETE FROM auth_codes");
+        runner.execute(connection, "DELETE FROM users");
     }
 
 }

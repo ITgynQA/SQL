@@ -1,7 +1,6 @@
 package ru.netology.web.test;
 
 import lombok.SneakyThrows;
-import org.apache.commons.dbutils.QueryRunner;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,21 +8,11 @@ import org.junit.jupiter.api.Test;
 import ru.netology.web.data.DataHelper;
 import ru.netology.web.page.LoginPage;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-
 import static com.codeborne.selenide.Selenide.open;
 import static ru.netology.web.data.DataHelper.cleanDataBase;
 
 
 public class AccountLoginTest {
-
-    public static QueryRunner runner = new QueryRunner();
-
-    @SneakyThrows
-    public static Connection getConn() {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
-    }
 
     @BeforeEach
     @SneakyThrows
@@ -39,7 +28,7 @@ public class AccountLoginTest {
 
     @SneakyThrows
     @Test
-    void validLoginAccountTest() {
+    void validUserTest() {
         var loginPage = new LoginPage();
         var authInfo = DataHelper.getAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
@@ -57,7 +46,7 @@ public class AccountLoginTest {
     }
 
     @Test
-    void inValidCodeTest() {
+    void inValidVerificationCodeTest() {
         var loginPage = new LoginPage();
         var authInfo = DataHelper.getAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
@@ -70,14 +59,22 @@ public class AccountLoginTest {
     @Test
     void inValidPasswordTest() {
         var loginPage = new LoginPage();
-        var authInfo = DataHelper.generateInvalidUser();
-        loginPage.enter(authInfo);
-        DataHelper.AuthInfo authInfo1;
-        authInfo1 = DataHelper.generateInvalidUser();
+
+        var authInfo1 = DataHelper.generateInvalidUser();
         loginPage.enter(authInfo1);
-        DataHelper.AuthInfo authInfo2;
-        authInfo2 = DataHelper.generateInvalidUser();
+        loginPage.clearFields();
+
+        var authInfo2 = DataHelper.generateInvalidUser();
         loginPage.enter(authInfo2);
+        loginPage.clearFields();
+
+        var authInfo3 = DataHelper.generateInvalidUser();
+        loginPage.enter(authInfo3);
+        loginPage.clearFields();
+
+        var authInfo = DataHelper.getAuthInfo();
+        var verificationPage = loginPage.validLogin(authInfo);
+
         var result = DataHelper.getBlockingUser();
         Assertions.assertEquals("blocked", result);
     }

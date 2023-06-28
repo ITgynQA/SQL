@@ -1,11 +1,11 @@
 package ru.netology.web.page;
 
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 import ru.netology.web.data.DataHelper;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-
 
 public class LoginPage {
     private SelenideElement loginField = $("[data-test-id=login] input");
@@ -26,6 +26,11 @@ public class LoginPage {
     public VerificationPage validLogin(DataHelper.AuthInfo info) {
         enter(info);
         return new VerificationPage();
+    }
+
+    public void clearFields() {
+        loginField.sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+        passwordField.sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
     }
 
 }
